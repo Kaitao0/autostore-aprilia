@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "frontend-design-audit": {
+      "source": {
+        "source": "github",
+        "repo": "mistyhx/frontend-design-audit"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "frontend-design-audit@frontend-design-audit": true
+  }
+}
