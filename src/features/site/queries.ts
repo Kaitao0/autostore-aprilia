@@ -127,6 +127,13 @@ export type ContentItem = { title: string; text: string };
 
 export type ReviewItem = { author: string; rating: number; text: string };
 
+export type ReelItem = {
+  platform: string;
+  url: string;
+  title: string;
+  thumbnail_url: string | null;
+};
+
 const fallbackHero: HeroContent = {
   headline: "Auto usate selezionate, ad Aprilia.",
   subheadline:
@@ -158,6 +165,7 @@ export type SiteContent = {
   whyUs: { title: string; items: ContentItem[] };
   services: { title: string; items: ContentItem[] };
   reviews: { title: string; items: ReviewItem[] };
+  reels: { title: string; items: ReelItem[] };
 };
 
 const fallbackContent: SiteContent = {
@@ -165,6 +173,7 @@ const fallbackContent: SiteContent = {
   whyUs: { title: "Perché Autostore", items: [] },
   services: { title: "I nostri servizi", items: [] },
   reviews: { title: "Dicono di noi", items: [] },
+  reels: { title: "Dai nostri social", items: [] },
 };
 
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
@@ -175,7 +184,7 @@ export const getSiteContent = cache(async (): Promise<SiteContent> => {
       .from("content_sections")
       .select("key, value")
       .eq("locale", "it")
-      .in("key", ["hero", "why_us", "services", "reviews"]);
+      .in("key", ["hero", "why_us", "services", "reviews", "featured_reels"]);
 
     const byKey = new Map((data ?? []).map((row) => [row.key, row.value]));
 
@@ -237,6 +246,37 @@ export const getSiteContent = cache(async (): Promise<SiteContent> => {
           }) as ReviewItem[])
         : [];
 
+    const reelsValue = byKey.get("featured_reels");
+    const reelItems: ReelItem[] =
+      reelsValue &&
+      typeof reelsValue === "object" &&
+      !Array.isArray(reelsValue) &&
+      Array.isArray((reelsValue as { items?: Json }).items)
+        ? ((reelsValue as { items: Json[] }).items.flatMap((item) => {
+            if (
+              item &&
+              typeof item === "object" &&
+              !Array.isArray(item) &&
+              typeof item.platform === "string" &&
+              typeof item.url === "string" &&
+              typeof item.title === "string"
+            ) {
+              return [
+                {
+                  platform: item.platform,
+                  url: item.url,
+                  title: item.title,
+                  thumbnail_url:
+                    typeof item.thumbnail_url === "string"
+                      ? item.thumbnail_url
+                      : null,
+                },
+              ];
+            }
+            return [];
+          }) as ReelItem[])
+        : [];
+
     return {
       hero,
       whyUs: {
@@ -250,6 +290,10 @@ export const getSiteContent = cache(async (): Promise<SiteContent> => {
       reviews: {
         title: sectionTitle("reviews", fallbackContent.reviews.title),
         items: reviewItems,
+      },
+      reels: {
+        title: sectionTitle("featured_reels", fallbackContent.reels.title),
+        items: reelItems,
       },
     };
   } catch {

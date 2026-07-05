@@ -14,6 +14,7 @@ import { Reveal } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { VehicleCard } from "@/components/site/vehicle-card";
 import { QuickSearch } from "@/components/site/quick-search";
+import { SocialSection } from "@/components/site/social-section";
 
 export default async function HomePage() {
   const [featured, makes, content, business] = await Promise.all([
@@ -219,6 +220,9 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      {/* ── Social reels ─────────────────────────────────────── */}
+      <SocialSection title={content.reels.title} items={content.reels.items} />
 
       {/* ── Where we are ─────────────────────────────────────── */}
       <section className="border-border/60 border-t">

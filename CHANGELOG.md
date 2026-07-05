@@ -2,6 +2,65 @@
 
 Tutte le modifiche rilevanti del progetto, organizzate per fase.
 
+## [Fase 2 — completata, in attesa di setup DB] Lead, permute, immagini, impostazioni — 2026-07-05
+
+### Aggiunto
+- **Notifiche email (Resend)**: modulo server-only con esito esplicito
+  `not_configured` quando mancano `RESEND_API_KEY`/`RESEND_FROM_EMAIL` o
+  l'email aziendale è un placeholder — niente successi simulati; ogni
+  tentativo registrato in `email_notifications`.
+- **LeadForm** (zod + honeypot + rate limit per IP, 5/10min): sulla scheda
+  veicolo (info/visita/test drive/permuta/finanziamento, veicolo e pagina
+  agganciati automaticamente) e su /contatti in modalità generica; CTA
+  della scheda e barra mobile ancorate al form.
+- **Form /vendi-permuta completo**: dati persona + auto, targa opzionale,
+  flag finanziamento in corso, fino a 6 foto (≤8MB, tipo verificato)
+  caricate sul bucket PRIVATO `trade-in-images`; id richiesta generato
+  server-side (la RLS anon non può rileggere le righe); rate limit 3/10min.
+- **Admin lead**: lista filtrabile (tipo/stato) con veicolo collegato,
+  dettaglio con azioni rapide tel/WhatsApp/mailto, cambio stato e note
+  interne.
+- **Admin permute**: lista + dettaglio con dati vettura, foto del cliente
+  via URL firmati (1h) dal bucket privato, gestione stato.
+- **Image manager** (tab Immagini del form veicolo, in modifica):
+  drag&drop multiplo con progress per file, compressione client-side in
+  WebP max 1920px prima dell'upload, riordino accessibile (su/giù), scelta
+  copertina sincronizzata con `vehicles.cover_image_url`, alt text, elimina
+  con conferma e pulizia storage; prima foto = copertina automatica.
+  Upload con la sessione staff (policy RLS storage), niente service key.
+- **Galleria pubblica** su /auto/[slug]: immagine principale + miniature +
+  fullscreen con prev/next e contatore; fallback alla cover URL.
+- **Impostazioni aziendali editabili** (super admin): contatti, sede,
+  orari, social (solo profili attivi con URL https compaiono nel footer),
+  URL profilo AutoScout24. Dati societari (P.IVA/REA/SDI/PEC) fissi.
+- **SocialSection** in home da `content_sections.featured_reels`: card con
+  link esterni, niente script di embed di default (consent-gated in Fase 3);
+  nascosta se vuota.
+- `docs/SETUP_SUPABASE.md` + `supabase/apply_all.sql` (bundle unico da
+  incollare nel SQL Editor) e `.env.local` locale (git-ignorato).
+
+### Verifiche
+- `next build` + lint + tsc strict: verdi su ogni commit.
+- Pass axe-core sulle pagine con i nuovi form (/, /contatti,
+  /vendi-permuta): 0 violazioni WCAG 2.1 A/AA.
+- Nota: /code-review formale sul diff Fase 2 e screenshot-audit rimandati
+  all'inizio della prossima sessione (fermata richiesta per limiti di
+  utilizzo).
+
+### ⚠️ Bloccato / azioni richieste al cliente
+- **La rete dell'ambiente di sviluppo remoto blocca `*.supabase.co`**: le
+  migration NON sono state applicate. Seguire `docs/SETUP_SUPABASE.md`
+  (3 passi: incollare `supabase/apply_all.sql` nel SQL Editor, creare il
+  primo utente, assegnare `super_admin`). In alternativa, abilitare
+  l'accesso a supabase.co nella network policy dell'ambiente Claude Code.
+- Le chiavi fornite sono in `.env.local` (mai committato). La
+  `service_role` è stata condivisa in chat: valutare la rigenerazione da
+  Settings → API dopo il go-live.
+- `RESEND_API_KEY` + `RESEND_FROM_EMAIL` (dominio mittente verificato) per
+  attivare le notifiche email.
+- Restano aperti: snippet AS24, telefono/WhatsApp/orari/social/logo
+  (ora modificabili da /admin/impostazioni), testi legali validati.
+
 ## [Fase 1 — completata] Fondamenta: DB, auth, admin, sito pubblico — 2026-07-05
 
 ### Blocco A — Scaffold
