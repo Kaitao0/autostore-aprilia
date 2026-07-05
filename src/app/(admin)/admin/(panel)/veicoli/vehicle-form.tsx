@@ -26,9 +26,11 @@ import {
 } from "@/lib/labels";
 import { formatDateTime } from "@/lib/format";
 import type {
+  VehicleImageRow,
   VehicleRow,
   VehicleStatusHistoryRow,
 } from "@/lib/types/database";
+import { VehicleImagesManager } from "@/components/admin/vehicle-images-manager";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -175,9 +177,11 @@ function vehicleToFormValues(vehicle?: VehicleRow): VehicleFormInput {
 export function VehicleForm({
   vehicle,
   history = [],
+  images = [],
 }: {
   vehicle?: VehicleRow;
   history?: VehicleStatusHistoryRow[];
+  images?: VehicleImageRow[];
 }) {
   const router = useRouter();
   const isEdit = Boolean(vehicle);
@@ -706,18 +710,21 @@ export function VehicleForm({
         {/* ── Immagini e video ────────────────────────────────── */}
         <TabsContent value="media">
           <FieldGroup>
-            <Alert>
-              <Info />
-              <AlertTitle>Image manager in arrivo (Fase 2)</AlertTitle>
-              <AlertDescription>
-                L&apos;upload multiplo con riordino, cover e alt text sarà
-                disponibile nella prossima fase. Per ora è possibile impostare
-                l&apos;URL dell&apos;immagine di copertina.
-              </AlertDescription>
-            </Alert>
+            {isEdit && vehicle ? (
+              <VehicleImagesManager vehicleId={vehicle.id} images={images} />
+            ) : (
+              <Alert>
+                <Info />
+                <AlertTitle>Prima crea il veicolo</AlertTitle>
+                <AlertDescription>
+                  L&apos;upload delle immagini si attiva dopo il primo
+                  salvataggio (serve l&apos;ID del veicolo per lo storage).
+                </AlertDescription>
+              </Alert>
+            )}
             <Field data-invalid={Boolean(errors.cover_image_url) || undefined}>
               <FieldLabel htmlFor="cover_image_url">
-                URL immagine di copertina
+                URL copertina (avanzato)
               </FieldLabel>
               <Input
                 id="cover_image_url"
@@ -726,6 +733,10 @@ export function VehicleForm({
                 {...register("cover_image_url")}
                 aria-invalid={Boolean(errors.cover_image_url) || undefined}
               />
+              <FieldDescription>
+                Gestita automaticamente dall&apos;image manager: modificala a
+                mano solo per URL esterni (es. cover demo).
+              </FieldDescription>
               <FieldError errors={[errors.cover_image_url]} />
             </Field>
             <Field>

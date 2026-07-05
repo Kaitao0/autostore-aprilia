@@ -23,6 +23,13 @@ export default async function EditVehiclePage({
   if (!vehicle) notFound();
 
   const history = await getVehicleStatusHistory(supabase, id);
+  const { data: images } = await supabase
+    .from("vehicle_images")
+    .select("*")
+    .eq("vehicle_id", id)
+    .order("sort_order");
 
-  return <VehicleForm vehicle={vehicle} history={history} />;
+  return (
+    <VehicleForm vehicle={vehicle} history={history} images={images ?? []} />
+  );
 }

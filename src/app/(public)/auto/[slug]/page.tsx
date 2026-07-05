@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Car, Check, ExternalLink, Mail, Phone } from "lucide-react";
 import {
   getSimilarVehicles,
   getSlugRedirect,
   getVehicleBySlug,
+  getVehicleImages,
   vehicleBadges,
   vehicleTitle,
 } from "@/features/catalog/queries";
@@ -42,6 +42,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { LeadForm } from "@/components/site/lead-form";
+import { VehicleGallery } from "@/components/site/vehicle-gallery";
 import { SectionHeading } from "@/components/site/section-heading";
 import { VehicleCard } from "@/components/site/vehicle-card";
 import { WhatsAppLink } from "@/components/site/whatsapp-link";
@@ -107,10 +108,28 @@ export default async function VehiclePage({
     notFound();
   }
 
-  const [similar, business] = await Promise.all([
+  const [similar, business, galleryImages] = await Promise.all([
     getSimilarVehicles(vehicle),
     getBusinessInformation(),
+    getVehicleImages(vehicle.id),
   ]);
+
+  // Gallery falls back to the cover URL (e.g. demo vehicles without
+  // uploaded images).
+  const gallery =
+    galleryImages.length > 0
+      ? galleryImages
+      : vehicle.cover_image_url
+        ? [
+            {
+              id: "cover",
+              url: vehicle.cover_image_url,
+              alt: null,
+              width: null,
+              height: null,
+            },
+          ]
+        : [];
 
   const title = vehicleTitle(vehicle);
   const badges = vehicleBadges(vehicle);
@@ -211,24 +230,19 @@ export default async function VehiclePage({
       <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr]">
         {/* ── Left column: media + details ─────────────────── */}
         <div className="flex min-w-0 flex-col gap-10">
-          <figure className="bg-surface-2 relative aspect-[16/10] overflow-hidden rounded-xl border">
-            {vehicle.cover_image_url ? (
-              <Image
-                src={vehicle.cover_image_url}
-                alt={`${title}${vehicle.exterior_color ? `, ${vehicle.exterior_color}` : ""}`}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover"
-              />
+          <div className="relative">
+            {gallery.length > 0 ? (
+              <VehicleGallery images={gallery} title={title} />
             ) : (
-              <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-2">
-                <Car className="size-12" aria-hidden />
-                <p className="text-sm">Foto in arrivo</p>
+              <div className="bg-surface-2 relative aspect-[16/10] overflow-hidden rounded-xl border">
+                <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-2">
+                  <Car className="size-12" aria-hidden />
+                  <p className="text-sm">Foto in arrivo</p>
+                </div>
               </div>
             )}
             {badges.length > 0 ? (
-              <div className="absolute top-4 left-4 flex gap-2">
+              <div className="pointer-events-none absolute top-4 left-4 z-10 flex gap-2">
                 {badges.map((badge) => (
                   <Badge key={badge.label} variant={badge.variant}>
                     {badge.label}
@@ -236,7 +250,7 @@ export default async function VehiclePage({
                 ))}
               </div>
             ) : null}
-          </figure>
+          </div>
 
           <section>
             <SectionHeading

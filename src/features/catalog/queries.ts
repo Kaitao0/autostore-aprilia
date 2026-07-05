@@ -238,6 +238,39 @@ export async function getAllPublishedForSitemap(): Promise<
   }
 }
 
+export type GalleryImage = {
+  id: string;
+  url: string;
+  alt: string | null;
+  width: number | null;
+  height: number | null;
+};
+
+/** Ordered gallery images (public RLS: only for published vehicles). */
+export async function getVehicleImages(
+  vehicleId: string,
+): Promise<GalleryImage[]> {
+  if (!isSupabaseConfigured()) return [];
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("vehicle_images")
+      .select("id, public_url, alt_text, width, height")
+      .eq("vehicle_id", vehicleId)
+      .order("is_cover", { ascending: false })
+      .order("sort_order");
+    return (data ?? []).map((row) => ({
+      id: row.id,
+      url: row.public_url,
+      alt: row.alt_text,
+      width: row.width,
+      height: row.height,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export function vehicleTitle(vehicle: PublicVehicleRow): string {
   return (
     vehicle.display_title ??
