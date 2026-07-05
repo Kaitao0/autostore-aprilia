@@ -15,12 +15,12 @@ const optionalTrimmed = z
 
 const optionalNumber = z.preprocess(
   (v) => (v === "" || v === null || v === undefined ? null : Number(v)),
-  z.number().finite().nullable(),
+  z.number("Inserisci un numero valido").finite().nullable(),
 );
 
 const optionalInt = z.preprocess(
   (v) => (v === "" || v === null || v === undefined ? null : Number(v)),
-  z.number().int().nullable(),
+  z.number("Inserisci un numero valido").int("Inserisci un numero intero").nullable(),
 );
 
 /** Empty select value ("") becomes null before enum validation. */

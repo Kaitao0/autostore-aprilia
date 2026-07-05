@@ -65,10 +65,7 @@ export default async function HomePage() {
 
       {/* ── Featured vehicles ────────────────────────────────── */}
       {featured.length > 0 ? (
-        <section
-          aria-labelledby="featured-title"
-          className="mx-auto w-full max-w-6xl px-4 py-16 md:px-6"
-        >
+        <section className="mx-auto w-full max-w-6xl px-4 py-16 md:px-6">
           <Reveal>
             <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
               <SectionHeading
@@ -83,9 +80,6 @@ export default async function HomePage() {
               </Button>
             </div>
           </Reveal>
-          <h2 id="featured-title" className="sr-only">
-            Auto in evidenza
-          </h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((vehicle, index) => (
               <Reveal key={vehicle.id} delay={Math.min(index * 0.06, 0.24)}>

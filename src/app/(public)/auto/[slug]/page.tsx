@@ -240,15 +240,12 @@ export default async function VehiclePage({
             ) : null}
           </figure>
 
-          <section aria-labelledby="dati-tecnici">
+          <section>
             <SectionHeading
               eyebrow="Scheda tecnica"
               title="Dati del veicolo"
               className="mb-6"
             />
-            <h2 id="dati-tecnici" className="sr-only">
-              Dati tecnici
-            </h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
               {specs.map((spec) => (
                 <div key={spec.label} className="flex flex-col gap-0.5">
@@ -264,15 +261,12 @@ export default async function VehiclePage({
           </section>
 
           {vehicle.description ? (
-            <section aria-labelledby="descrizione">
+            <section>
               <SectionHeading
                 eyebrow="Descrizione"
                 title="La vettura"
                 className="mb-4"
               />
-              <h2 id="descrizione" className="sr-only">
-                Descrizione
-              </h2>
               <p className="text-muted-foreground max-w-prose text-base leading-relaxed whitespace-pre-line">
                 {vehicle.description}
               </p>
@@ -280,15 +274,12 @@ export default async function VehiclePage({
           ) : null}
 
           {vehicle.equipment.length > 0 ? (
-            <section aria-labelledby="dotazioni">
+            <section>
               <SectionHeading
                 eyebrow="Dotazioni"
                 title="Equipaggiamento"
                 className="mb-6"
               />
-              <h2 id="dotazioni" className="sr-only">
-                Dotazioni
-              </h2>
               <ul className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
                 {vehicle.equipment.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm">
@@ -404,15 +395,12 @@ export default async function VehiclePage({
 
       {/* ── Similar vehicles ─────────────────────────────────── */}
       {similar.length > 0 ? (
-        <section className="mt-16" aria-labelledby="simili">
+        <section className="mt-16">
           <SectionHeading
             eyebrow="Potrebbero interessarti"
             title="Auto simili nel parco"
             className="mb-8"
           />
-          <h2 id="simili" className="sr-only">
-            Auto simili
-          </h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {similar.map((v) => (
               <VehicleCard key={v.id} vehicle={v} />
@@ -425,7 +413,7 @@ export default async function VehiclePage({
       <div className="border-border/60 bg-background/95 fixed inset-x-0 bottom-0 z-40 border-t p-3 backdrop-blur-md md:hidden">
         <div className="mx-auto flex max-w-lg items-center gap-2">
           {hasPhone ? (
-            <Button className="flex-1" asChild>
+            <Button className="h-12 flex-1" asChild>
               <a href={`tel:${business.phone?.replaceAll(" ", "")}`}>
                 <Phone data-icon="inline-start" />
                 Chiama
@@ -439,13 +427,13 @@ export default async function VehiclePage({
               label="WhatsApp"
               variant={hasPhone ? "outline" : "default"}
               size="default"
-              className="flex-1"
+              className="h-12 flex-1"
             />
           ) : null}
           {hasEmail ? (
             <Button
               variant={hasPhone || hasWhatsApp ? "outline" : "default"}
-              className="flex-1"
+              className="h-12 flex-1"
               asChild
             >
               <a

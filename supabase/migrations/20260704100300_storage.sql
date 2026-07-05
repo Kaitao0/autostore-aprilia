@@ -55,9 +55,9 @@ create policy "trade-in-images: anon upload bound to request"
   with check (
     bucket_id = 'trade-in-images'
     and (storage.foldername(name))[1] = 'trade-ins'
-    and exists (
-      select 1 from public.trade_in_requests r
-      where r.id::text = (storage.foldername(name))[2]
+    -- SECURITY DEFINER helper: anon cannot SELECT trade_in_requests directly
+    and public.trade_in_request_exists(
+      ((storage.foldername(name))[2])::uuid
     )
   );
 

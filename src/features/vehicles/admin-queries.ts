@@ -29,7 +29,8 @@ export async function getAdminVehicles(
   let query = supabase.from("vehicles").select("*", { count: "exact" });
 
   if (filters.q) {
-    const q = filters.q.replaceAll("%", "\\%").replaceAll(",", " ");
+    // Commas and parentheses are PostgREST or() syntax; % is a wildcard.
+    const q = filters.q.replaceAll("%", "\\%").replace(/[(),]/g, " ");
     query = query.or(
       `make.ilike.%${q}%,model.ilike.%${q}%,version.ilike.%${q}%,slug.ilike.%${q}%,internal_code.ilike.%${q}%`,
     );

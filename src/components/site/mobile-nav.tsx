@@ -29,7 +29,7 @@ export function MobileNav({
         <Button
           variant="outline"
           size="icon"
-          className="lg:hidden"
+          className="size-11 lg:hidden"
           aria-label="Apri il menu di navigazione"
         >
           <Menu />
@@ -58,7 +58,7 @@ export function MobileNav({
         </nav>
         <div className="mt-auto flex flex-col gap-2 p-4">
           {whatsapp ? (
-            <Button variant="outline" asChild>
+            <Button variant="outline" className="h-11" asChild>
               <a
                 href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`}
                 target="_blank"
@@ -70,7 +70,7 @@ export function MobileNav({
             </Button>
           ) : null}
           {phone ? (
-            <Button asChild>
+            <Button className="h-11" asChild>
               <a href={`tel:${phone.replaceAll(" ", "")}`}>
                 <Phone data-icon="inline-start" />
                 {phone}

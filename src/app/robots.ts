@@ -7,7 +7,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin", "/admin/", "/api/"],
+        // /api/og must stay fetchable: social crawlers respect robots.txt
+        // when retrieving og:image URLs.
+        disallow: ["/admin", "/admin/"],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,

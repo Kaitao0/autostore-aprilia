@@ -33,6 +33,21 @@ as $$
       or public.has_role(_user_id, 'editor');
 $$;
 
+-- Existence check for anon INSERT policies on trade-in images: an
+-- invoker-rights subquery against trade_in_requests would be blocked
+-- by that table's own RLS (anon has no SELECT policy there).
+create or replace function public.trade_in_request_exists(_request_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.trade_in_requests where id = _request_id
+  );
+$$;
+
 -- ── profiles ───────────────────────────────────────────────────
 create policy "profiles: read own or super_admin reads all"
   on public.profiles for select to authenticated
@@ -163,11 +178,7 @@ create policy "trade_in_requests: staff updates"
 
 create policy "trade_in_images: anon inserts bound to a request"
   on public.trade_in_images for insert to anon, authenticated
-  with check (
-    exists (
-      select 1 from public.trade_in_requests r where r.id = trade_in_id
-    )
-  );
+  with check (public.trade_in_request_exists(trade_in_id));
 
 create policy "trade_in_images: staff reads"
   on public.trade_in_images for select to authenticated

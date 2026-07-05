@@ -60,17 +60,22 @@ export default async function TradeInPage() {
 
       <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((step, index) => (
-          <Reveal key={step.title} delay={Math.min(index * 0.06, 0.24)}>
-            <li className="bg-card flex h-full flex-col gap-3 rounded-xl border p-6">
-              <step.icon className="text-primary size-5" aria-hidden />
-              <h2 className="font-heading text-base font-semibold tracking-tight">
-                {index + 1}. {step.title}
-              </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {step.text}
-              </p>
-            </li>
-          </Reveal>
+          <li key={step.title} className="h-full">
+            <Reveal
+              delay={Math.min(index * 0.06, 0.24)}
+              className="h-full"
+            >
+              <div className="bg-card flex h-full flex-col gap-3 rounded-xl border p-6">
+                <step.icon className="text-primary size-5" aria-hidden />
+                <h2 className="font-heading text-base font-semibold tracking-tight">
+                  {index + 1}. {step.title}
+                </h2>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {step.text}
+                </p>
+              </div>
+            </Reveal>
+          </li>
         ))}
       </ol>
 

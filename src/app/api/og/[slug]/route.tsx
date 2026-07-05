@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 import { ImageResponse } from "next/og";
 import { getVehicleBySlug, vehicleTitle } from "@/features/catalog/queries";
 import { formatMileage, formatPrice } from "@/lib/format";
@@ -17,7 +17,11 @@ async function resolveCoverSrc(
   if (coverUrl.startsWith("http")) return coverUrl;
   // Local /public asset (demo covers): inline as data URL.
   try {
-    const file = await readFile(join(process.cwd(), "public", coverUrl));
+    const publicDir = join(process.cwd(), "public");
+    const filePath = join(publicDir, coverUrl);
+    // Never read outside /public, whatever the stored URL contains.
+    if (!filePath.startsWith(publicDir + sep)) return null;
+    const file = await readFile(filePath);
     const ext = coverUrl.split(".").pop() ?? "webp";
     return `data:image/${ext};base64,${file.toString("base64")}`;
   } catch {
