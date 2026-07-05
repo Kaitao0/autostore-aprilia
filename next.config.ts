@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // Trade-in photo uploads and admin image manager (multi-file)
+      bodySizeLimit: "25mb",
+    },
+  },
   images: {
     remotePatterns: [
       {

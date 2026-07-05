@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
-import { BadgeEuro, Camera, ClipboardList, Handshake, Mail } from "lucide-react";
-import {
-  getBusinessInformation,
-  isPlaceholder,
-} from "@/features/site/queries";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { BadgeEuro, Camera, ClipboardList, Handshake } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
-import { WhatsAppLink } from "@/components/site/whatsapp-link";
+import { TradeInForm } from "@/components/site/trade-in-form";
 import { Reveal } from "@/components/site/reveal";
 
 export const metadata: Metadata = {
@@ -25,7 +19,7 @@ const steps = [
   },
   {
     icon: Camera,
-    title: "Mandaci qualche foto",
+    title: "Allega qualche foto",
     text: "Esterni, interni e dettagli utili. Le foto ci permettono una prima valutazione più precisa.",
   },
   {
@@ -40,14 +34,7 @@ const steps = [
   },
 ];
 
-export default async function TradeInPage() {
-  const business = await getBusinessInformation();
-  const hasWhatsApp = !isPlaceholder(business.whatsapp);
-  const hasEmail = !isPlaceholder(business.email);
-  const mailSubject = "Valutazione usato / permuta";
-  const mailBody =
-    "Salve,\nvorrei una valutazione della mia auto.\n\nMarca:\nModello:\nAnno:\nChilometri:\nAlimentazione:\nNote (finanziamento in corso, danni, ecc.):";
-
+export default function TradeInPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
       <SectionHeading
@@ -61,10 +48,7 @@ export default async function TradeInPage() {
       <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((step, index) => (
           <li key={step.title} className="h-full">
-            <Reveal
-              delay={Math.min(index * 0.06, 0.24)}
-              className="h-full"
-            >
+            <Reveal delay={Math.min(index * 0.06, 0.24)} className="h-full">
               <div className="bg-card flex h-full flex-col gap-3 rounded-xl border p-6">
                 <step.icon className="text-primary size-5" aria-hidden />
                 <h2 className="font-heading text-base font-semibold tracking-tight">
@@ -79,38 +63,19 @@ export default async function TradeInPage() {
         ))}
       </ol>
 
-      <div className="mt-12 max-w-2xl">
-        <Alert>
-          <ClipboardList />
-          <AlertTitle>Form di valutazione online in arrivo</AlertTitle>
-          <AlertDescription>
-            Nella Fase 2 potrai inviare dati e foto della tua auto
-            direttamente da questa pagina, con caricamento sicuro. Nel
-            frattempo puoi scriverci: rispondiamo con la stessa cura.
-          </AlertDescription>
-        </Alert>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          {hasEmail ? (
-            <Button size="lg" asChild>
-              <a
-                href={`mailto:${business.email}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`}
-              >
-                <Mail data-icon="inline-start" />
-                Richiedi la valutazione via email
-              </a>
-            </Button>
-          ) : null}
-          {hasWhatsApp ? (
-            <WhatsAppLink
-              number={business.whatsapp ?? ""}
-              message="Salve, vorrei una valutazione della mia auto per vendita o permuta."
-              label="Scrivici su WhatsApp"
-              size="lg"
-            />
-          ) : null}
+      <section id="valutazione" className="mt-12 scroll-mt-24">
+        <div className="bg-surface-1 rounded-xl border p-6 md:p-10">
+          <SectionHeading
+            eyebrow="Richiedi la valutazione"
+            title="Compila con i dati della tua auto"
+            description="Più dettagli ci dai, più la prima proposta sarà precisa. Le foto sono facoltative ma aiutano molto."
+            className="mb-8"
+          />
+          <div className="max-w-3xl">
+            <TradeInForm />
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

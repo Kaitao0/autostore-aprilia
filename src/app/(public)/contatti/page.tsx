@@ -6,6 +6,7 @@ import {
 } from "@/features/site/queries";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LeadForm } from "@/components/site/lead-form";
 import { SectionHeading } from "@/components/site/section-heading";
 import { WhatsAppLink } from "@/components/site/whatsapp-link";
 
@@ -112,6 +113,18 @@ export default async function ContactsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <section id="richiesta" className="mt-10 scroll-mt-24">
+        <div className="bg-surface-1 rounded-xl border p-6 md:p-10">
+          <SectionHeading
+            eyebrow="Scrivici"
+            title="Mandaci un messaggio"
+            description="Rispondiamo appena possibile. Se cerchi un'auto specifica, dicci pure quale."
+            className="mb-8"
+          />
+          <LeadForm genericOnly sourcePage="/contatti" idPrefix="contact" />
+        </div>
+      </section>
 
       <div className="mt-10 grid gap-5 md:grid-cols-2">
         <div className="bg-card rounded-xl border p-6">

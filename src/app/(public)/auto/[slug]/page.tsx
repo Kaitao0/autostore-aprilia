@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { LeadForm } from "@/components/site/lead-form";
 import { SectionHeading } from "@/components/site/section-heading";
 import { VehicleCard } from "@/components/site/vehicle-card";
 import { WhatsAppLink } from "@/components/site/whatsapp-link";
@@ -115,11 +116,8 @@ export default async function VehiclePage({
   const badges = vehicleBadges(vehicle);
   const hasPhone = !isPlaceholder(business.phone);
   const hasWhatsApp = !isPlaceholder(business.whatsapp);
-  const hasEmail = !isPlaceholder(business.email);
   const vehicleUrl = `${siteUrl}/auto/${vehicle.slug}`;
   const whatsappMessage = `Salve, vorrei informazioni su ${title} (${vehicleUrl})`;
-  const mailSubject = `Richiesta informazioni — ${title}`;
-  const mailBody = `Salve,\nvorrei ricevere informazioni su ${title}.\nLink scheda: ${vehicleUrl}\n\nNome e cognome:\nTelefono:`;
 
   const specs: Array<{ label: string; value: string }> = [
     {
@@ -356,16 +354,16 @@ export default async function VehiclePage({
                   size="lg"
                 />
               ) : null}
-              {hasEmail ? (
-                <Button variant="outline" size="lg" asChild>
-                  <a
-                    href={`mailto:${business.email}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`}
-                  >
-                    <Mail data-icon="inline-start" />
-                    Richiedi informazioni
-                  </a>
-                </Button>
-              ) : null}
+              <Button
+                variant={hasPhone || hasWhatsApp ? "outline" : "default"}
+                size="lg"
+                asChild
+              >
+                <a href="#richiesta">
+                  <Mail data-icon="inline-start" />
+                  Richiedi informazioni
+                </a>
+              </Button>
               {!hasPhone && !hasWhatsApp ? (
                 <p className="text-muted-foreground text-xs">
                   Telefono e WhatsApp saranno attivi appena configurati. Nel
@@ -392,6 +390,22 @@ export default async function VehiclePage({
           </div>
         </aside>
       </div>
+
+      {/* ── Lead form ────────────────────────────────────────── */}
+      <section id="richiesta" className="mt-16 scroll-mt-24">
+        <div className="bg-surface-1 rounded-xl border p-6 md:p-10">
+          <SectionHeading
+            eyebrow="Ti interessa questa auto?"
+            title="Richiedi informazioni, una visita o un test drive"
+            description={`Compila il modulo: ti ricontattiamo per ${title}. In alternativa chiamaci o scrivici sui canali qui sopra.`}
+            className="mb-8"
+          />
+          <LeadForm
+            vehicleId={vehicle.id}
+            sourcePage={`/auto/${vehicle.slug}`}
+          />
+        </div>
+      </section>
 
       {/* ── Similar vehicles ─────────────────────────────────── */}
       {similar.length > 0 ? (
@@ -430,20 +444,16 @@ export default async function VehiclePage({
               className="h-12 flex-1"
             />
           ) : null}
-          {hasEmail ? (
-            <Button
-              variant={hasPhone || hasWhatsApp ? "outline" : "default"}
-              className="h-12 flex-1"
-              asChild
-            >
-              <a
-                href={`mailto:${business.email}?subject=${encodeURIComponent(mailSubject)}`}
-              >
-                <Mail data-icon="inline-start" />
-                Email
-              </a>
-            </Button>
-          ) : null}
+          <Button
+            variant={hasPhone || hasWhatsApp ? "outline" : "default"}
+            className="h-12 flex-1"
+            asChild
+          >
+            <a href="#richiesta">
+              <Mail data-icon="inline-start" />
+              Scrivici
+            </a>
+          </Button>
         </div>
       </div>
 
