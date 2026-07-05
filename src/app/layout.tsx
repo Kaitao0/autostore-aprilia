@@ -41,6 +41,10 @@ export default function RootLayout({
       className={`dark ${inter.variable} ${spaceGrotesk.variable}`}
     >
       <body className="style-nova">
+        <noscript>
+          {/* Scroll-reveal content must stay visible without JavaScript */}
+          <style>{`[data-reveal]{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
         {children}
         <Toaster position="top-center" />
       </body>

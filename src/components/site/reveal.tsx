@@ -1,10 +1,14 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 
 /**
  * Scroll reveal: opacity 0→1 + translateY 14px→0, once, ease-out expo.
- * With prefers-reduced-motion the content renders statically.
+ * reducedMotion="user" lets Motion drop the transform for users with
+ * prefers-reduced-motion (opacity still fades in, no movement) without
+ * branching in React — branching would cause a hydration mismatch that
+ * leaves the SSR inline `opacity:0` in place.
+ * The root layout ships a <noscript> override for no-JS visitors.
  */
 export function Reveal({
   children,
@@ -15,21 +19,18 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-64px" }}
-      transition={{ duration: 0.45, delay, ease: [0.16, 1, 0.3, 1] }}
-    >
-      {children}
-    </motion.div>
+    <MotionConfig reducedMotion="user">
+      <motion.div
+        data-reveal
+        className={className}
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-64px" }}
+        transition={{ duration: 0.45, delay, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {children}
+      </motion.div>
+    </MotionConfig>
   );
 }
