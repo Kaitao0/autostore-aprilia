@@ -70,7 +70,7 @@ export type LeadStatus =
   | "non_interessato"
   | "spam";
 
-export interface ProfileRow {
+export type ProfileRow = {
   id: string;
   email: string;
   full_name: string | null;
@@ -80,14 +80,14 @@ export interface ProfileRow {
   updated_at: string;
 }
 
-export interface UserRoleRow {
+export type UserRoleRow = {
   id: string;
   user_id: string;
   role: AppRole;
   created_at: string;
 }
 
-export interface VehicleRow {
+export type VehicleRow = {
   id: string;
   slug: string;
   internal_code: string | null;
@@ -147,7 +147,7 @@ export type PublicVehicleRow = Omit<
   "plate" | "vin" | "internal_notes" | "internal_code" | "external_id" | "source" | "published"
 >;
 
-export interface VehicleImageRow {
+export type VehicleImageRow = {
   id: string;
   vehicle_id: string;
   storage_path: string;
@@ -161,7 +161,7 @@ export interface VehicleImageRow {
   updated_at: string;
 }
 
-export interface VehicleFeatureRow {
+export type VehicleFeatureRow = {
   id: string;
   name: string;
   category: string | null;
@@ -169,12 +169,12 @@ export interface VehicleFeatureRow {
   created_at: string;
 }
 
-export interface VehicleFeatureAssignmentRow {
+export type VehicleFeatureAssignmentRow = {
   vehicle_id: string;
   feature_id: string;
 }
 
-export interface VehicleStatusHistoryRow {
+export type VehicleStatusHistoryRow = {
   id: string;
   vehicle_id: string;
   from_status: AvailabilityStatus | null;
@@ -184,7 +184,7 @@ export interface VehicleStatusHistoryRow {
   created_at: string;
 }
 
-export interface LeadRow {
+export type LeadRow = {
   id: string;
   first_name: string;
   last_name: string | null;
@@ -205,7 +205,7 @@ export interface LeadRow {
   updated_at: string;
 }
 
-export interface TradeInRequestRow {
+export type TradeInRequestRow = {
   id: string;
   first_name: string;
   last_name: string | null;
@@ -227,25 +227,25 @@ export interface TradeInRequestRow {
   updated_at: string;
 }
 
-export interface TradeInImageRow {
+export type TradeInImageRow = {
   id: string;
   trade_in_id: string;
   storage_path: string;
   created_at: string;
 }
 
-export interface BusinessHoursEntry {
+export type BusinessHoursEntry = {
   days: string;
   hours: string;
 }
 
-export interface SocialProfileEntry {
+export type SocialProfileEntry = {
   platform: string;
   url: string;
   enabled: boolean;
 }
 
-export interface BusinessInformationRow {
+export type BusinessInformationRow = {
   id: number;
   name: string;
   legal_name: string;
@@ -271,20 +271,20 @@ export interface BusinessInformationRow {
   updated_at: string;
 }
 
-export interface SiteSettingRow {
+export type SiteSettingRow = {
   key: string;
   value: Json;
   updated_at: string;
 }
 
-export interface ContentSectionRow {
+export type ContentSectionRow = {
   key: string;
   locale: string;
   value: Json;
   updated_at: string;
 }
 
-export interface AutoscoutSettingsRow {
+export type AutoscoutSettingsRow = {
   id: number;
   embed_snippet: string | null;
   dealer_url: string | null;
@@ -295,7 +295,7 @@ export interface AutoscoutSettingsRow {
   updated_at: string;
 }
 
-export interface EmailNotificationRow {
+export type EmailNotificationRow = {
   id: string;
   to_email: string;
   subject: string;
@@ -307,7 +307,7 @@ export interface EmailNotificationRow {
   created_at: string;
 }
 
-export interface AuditLogRow {
+export type AuditLogRow = {
   id: string;
   actor_id: string | null;
   action: string;
@@ -317,7 +317,7 @@ export interface AuditLogRow {
   created_at: string;
 }
 
-export interface SlugRedirectRow {
+export type SlugRedirectRow = {
   old_slug: string;
   vehicle_id: string;
   created_at: string;
@@ -327,14 +327,14 @@ export interface SlugRedirectRow {
 type InsertOf<Row, Required extends keyof Row> = Partial<Row> &
   Pick<Row, Required>;
 
-interface TableDef<Row, Insert, Update> {
+type TableDef<Row, Insert, Update> = {
   Row: Row;
   Insert: Insert;
   Update: Update;
   Relationships: [];
 }
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       profiles: TableDef<ProfileRow, InsertOf<ProfileRow, "id" | "email">, Partial<ProfileRow>>;
