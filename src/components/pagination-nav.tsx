@@ -10,13 +10,14 @@ import {
 
 function pageHref(
   searchParams: Record<string, string | undefined>,
+  pageParam: string,
   page: number,
 ): string {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(searchParams)) {
-    if (value && key !== "page") params.set(key, value);
+    if (value && key !== pageParam) params.set(key, value);
   }
-  if (page > 1) params.set("page", String(page));
+  if (page > 1) params.set(pageParam, String(page));
   const qs = params.toString();
   return qs ? `?${qs}` : "?";
 }
@@ -37,15 +38,17 @@ function visiblePages(page: number, totalPages: number): Array<number | "…"> {
   return result;
 }
 
-export function VehiclesPagination({
+export function PaginationNav({
   page,
   totalPages,
   searchParams,
-  ariaLabel = "Paginazione veicoli",
+  pageParam = "page",
+  ariaLabel = "Paginazione",
 }: {
   page: number;
   totalPages: number;
   searchParams: Record<string, string | undefined>;
+  pageParam?: string;
   ariaLabel?: string;
 }) {
   return (
@@ -53,7 +56,9 @@ export function VehiclesPagination({
       <PaginationContent>
         {page > 1 ? (
           <PaginationItem>
-            <PaginationPrevious href={pageHref(searchParams, page - 1)} />
+            <PaginationPrevious
+              href={pageHref(searchParams, pageParam, page - 1)}
+            />
           </PaginationItem>
         ) : null}
         {visiblePages(page, totalPages).map((p, i) =>
@@ -64,7 +69,7 @@ export function VehiclesPagination({
           ) : (
             <PaginationItem key={p}>
               <PaginationLink
-                href={pageHref(searchParams, p)}
+                href={pageHref(searchParams, pageParam, p)}
                 isActive={p === page}
               >
                 {p}
@@ -74,7 +79,9 @@ export function VehiclesPagination({
         )}
         {page < totalPages ? (
           <PaginationItem>
-            <PaginationNext href={pageHref(searchParams, page + 1)} />
+            <PaginationNext
+              href={pageHref(searchParams, pageParam, page + 1)}
+            />
           </PaginationItem>
         ) : null}
       </PaginationContent>

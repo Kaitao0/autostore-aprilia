@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/native-select";
 import { CircleOff } from "lucide-react";
 import { VehiclesTable } from "./vehicles-table";
-import { VehiclesPagination } from "./vehicles-pagination";
+import { PaginationNav } from "@/components/pagination-nav";
 import { DeleteDemoButton } from "./delete-demo-button";
 
 export const metadata: Metadata = {
@@ -210,7 +210,8 @@ export default async function AdminVehiclesPage({
             )}
           />
           {totalPages > 1 ? (
-            <VehiclesPagination
+            <PaginationNav
+              ariaLabel="Paginazione veicoli"
               page={filters.page}
               totalPages={totalPages}
               searchParams={params}
