@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { FileSpreadsheet, Plus, Search } from "lucide-react";
 import { requireStaff } from "@/features/auth/guards";
 import {
   getAdminVehicles,
@@ -110,6 +110,12 @@ export default async function AdminVehiclesPage({
         </div>
         <div className="flex items-center gap-2">
           {demoCount > 0 ? <DeleteDemoButton demoCount={demoCount} /> : null}
+          <Button variant="outline" asChild>
+            <Link href="/admin/veicoli/import">
+              <FileSpreadsheet data-icon="inline-start" />
+              Importa CSV
+            </Link>
+          </Button>
           <Button asChild>
             <Link href="/admin/veicoli/nuovo">
               <Plus data-icon="inline-start" />
