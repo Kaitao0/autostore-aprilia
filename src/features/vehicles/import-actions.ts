@@ -4,9 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getStaffOrNull } from "@/features/auth/guards";
 import { vehicleSlug, slugify } from "@/lib/slug";
 import type { ActionResult } from "./actions";
-import type { ImportRow } from "./import-utils";
-
-export const MAX_IMPORT_ROWS = 300;
+import { MAX_IMPORT_ROWS, type ImportRow } from "./import-utils";
 
 /** Dedup preview: which external_ids already exist in the catalog. */
 export async function checkExistingExternalIdsAction(

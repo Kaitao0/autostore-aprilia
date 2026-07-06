@@ -14,13 +14,13 @@ import { toast } from "sonner";
 import {
   checkExistingExternalIdsAction,
   importVehiclesAction,
-  MAX_IMPORT_ROWS,
   type ImportRowResult,
 } from "@/features/vehicles/import-actions";
 import {
   buildImportRow,
   HEADER_GUESSES,
   IMPORT_FIELDS,
+  MAX_IMPORT_ROWS,
   type ImportRow,
 } from "@/features/vehicles/import-utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

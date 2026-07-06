@@ -10,6 +10,8 @@ import type {
  * (usable from both the client wizard and the server action).
  */
 
+export const MAX_IMPORT_ROWS = 300;
+
 export type ImportRow = {
   external_id: string | null;
   make: string;
