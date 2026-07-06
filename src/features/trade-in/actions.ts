@@ -34,6 +34,15 @@ export async function submitTradeInAction(
     };
   }
 
+  // Honeypot BEFORE validation (a filled field must fake success).
+  const honeypot = formData.get("website");
+  if (typeof honeypot === "string" && honeypot.length > 0) {
+    return {
+      status: "success",
+      message: "Richiesta inviata. Ti ricontatteremo con la valutazione.",
+    };
+  }
+
   const parsed = tradeInFormSchema.safeParse({
     first_name: formData.get("first_name"),
     last_name: formData.get("last_name"),
@@ -60,14 +69,6 @@ export async function submitTradeInAction(
     };
   }
   const values = parsed.data;
-
-  // Honeypot: pretend success, store nothing.
-  if (values.website && values.website.length > 0) {
-    return {
-      status: "success",
-      message: "Richiesta inviata. Ti ricontatteremo con la valutazione.",
-    };
-  }
 
   const h = await headers();
   const ip =

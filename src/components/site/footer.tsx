@@ -3,6 +3,7 @@ import {
   getBusinessInformation,
   isPlaceholder,
 } from "@/features/site/queries";
+import { CookiePreferencesButton } from "@/components/consent/cookie-banner";
 import {
   FacebookIcon,
   InstagramIcon,
@@ -127,6 +128,9 @@ export async function SiteFooter() {
               >
                 Cookie policy
               </Link>
+            </li>
+            <li>
+              <CookiePreferencesButton />
             </li>
             <li>
               <Link

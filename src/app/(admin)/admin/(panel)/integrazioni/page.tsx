@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { CircleOff, Plug } from "lucide-react";
 import { requireStaff } from "@/features/auth/guards";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,13 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
+import { AutoscoutSnippetForm } from "./autoscout-snippet-form";
 
 export const metadata: Metadata = {
   title: "Integrazioni",
@@ -28,7 +21,7 @@ export default async function AdminIntegrationsPage() {
 
   const { data: autoscout } = await supabase
     .from("autoscout_settings")
-    .select("status, embed_snippet, dealer_url, feed_url, last_import_at")
+    .select("status, embed_snippet, feed_url, last_import_at")
     .eq("id", 1)
     .maybeSingle();
 
@@ -47,27 +40,27 @@ export default async function AdminIntegrationsPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+        <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>AutoScout24 — widget (gratuito)</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              AutoScout24 — widget (gratuito)
+              {embedConfigured ? (
+                <Badge>Configurato</Badge>
+              ) : (
+                <Badge variant="secondary">Non configurato</Badge>
+              )}
+            </CardTitle>
             <CardDescription>
-              Snippet Carportal di sola visualizzazione, canale secondario
-              rispetto al catalogo su Supabase.
+              Snippet Carportal di sola visualizzazione, canale secondario:
+              la fonte di verità del catalogo resta Supabase. Con lo snippet
+              attivo, la sezione “Anche su AutoScout24” compare in home e in
+              /contatti (previo consenso cookie del visitatore).
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {embedConfigured ? (
-              <Badge className="w-fit">Configurato</Badge>
-            ) : (
-              <Badge variant="secondary" className="w-fit">
-                Non configurato
-              </Badge>
-            )}
-            <p className="text-muted-foreground text-sm">
-              {embedConfigured
-                ? "Lo snippet è attivo e viene caricato sul sito solo previo consenso cookie."
-                : "Per attivarlo serve lo snippet embed fornito da AutoScout24. Il campo per incollarlo arriva nella Fase 3; fino ad allora il sito mostra lo stato “non configurato”."}
-            </p>
+          <CardContent>
+            <AutoscoutSnippetForm
+              currentSnippet={autoscout?.embed_snippet ?? null}
+            />
           </CardContent>
         </Card>
 
@@ -85,7 +78,8 @@ export default async function AdminIntegrationsPage() {
             <p className="text-muted-foreground text-sm">
               Servizio su richiesta ad AutoScout24 (Fase 4, bloccata). La
               sincronizzazione non verrà costruita finché non saranno fornite
-              le credenziali del feed.
+              le credenziali del feed. In alternativa è disponibile
+              l&apos;import CSV manuale da “Veicoli → Importa CSV”.
             </p>
           </CardContent>
         </Card>
@@ -98,7 +92,7 @@ export default async function AdminIntegrationsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
-            {process.env.RESEND_API_KEY ? (
+            {process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL ? (
               <Badge className="w-fit">Configurato</Badge>
             ) : (
               <Badge variant="secondary" className="w-fit">
@@ -106,29 +100,13 @@ export default async function AdminIntegrationsPage() {
               </Badge>
             )}
             <p className="text-muted-foreground text-sm">
-              {process.env.RESEND_API_KEY
-                ? "RESEND_API_KEY presente: le notifiche verranno inviate (Fase 2)."
-                : "RESEND_API_KEY assente: i form salvano comunque i dati e mostrano “notifica email non configurata”."}
+              {process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL
+                ? "RESEND_API_KEY e mittente presenti: le notifiche vengono inviate e registrate."
+                : "Servono RESEND_API_KEY e RESEND_FROM_EMAIL (mittente su dominio verificato). I form salvano comunque i dati e lo dichiarano."}
             </p>
           </CardContent>
         </Card>
       </div>
-
-      <Empty className="border">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            {embedConfigured ? <Plug /> : <CircleOff />}
-          </EmptyMedia>
-          <EmptyTitle>
-            Configurazione integrazioni{" "}
-            <Badge variant="secondary">Fase 3</Badge>
-          </EmptyTitle>
-          <EmptyDescription>
-            Il form per incollare lo snippet AS24 e la gestione completa delle
-            integrazioni arrivano nella Fase 3.
-          </EmptyDescription>
-        </EmptyHeader>
-      </Empty>
     </>
   );
 }

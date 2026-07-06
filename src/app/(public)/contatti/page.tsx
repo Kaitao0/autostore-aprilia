@@ -6,6 +6,8 @@ import {
 } from "@/features/site/queries";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { AutoscoutSection } from "@/components/site/autoscout-section";
+import { ConsentGate } from "@/components/consent/consent-gate";
 import { LeadForm } from "@/components/site/lead-form";
 import { SectionHeading } from "@/components/site/section-heading";
 import { WhatsAppLink } from "@/components/site/whatsapp-link";
@@ -147,12 +149,23 @@ export default async function ContactsPage() {
           <h2 className="font-heading mb-4 text-lg font-semibold tracking-tight">
             Mappa
           </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            La mappa interattiva verrà mostrata qui previo consenso ai cookie
-            (banner in arrivo nella Fase 3). Nel frattempo puoi aprire la
-            posizione direttamente su Google Maps con il pulsante qui sopra.
-          </p>
+          <ConsentGate serviceName="Google Maps" className="min-h-64">
+            <iframe
+              title={`Mappa: ${business.legal_name}, ${business.address}, ${business.city}`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(
+                `${business.legal_name} ${business.address} ${business.zip} ${business.city}`,
+              )}&output=embed`}
+              className="h-64 w-full rounded-lg border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+          </ConsentGate>
         </div>
+      </div>
+
+      <div className="mt-10">
+        <AutoscoutSection />
       </div>
     </div>
   );

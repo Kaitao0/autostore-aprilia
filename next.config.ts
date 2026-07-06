@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       // Trade-in photo uploads and admin image manager (multi-file)
-      bodySizeLimit: "25mb",
+      bodySizeLimit: "50mb",
     },
   },
   images: {

@@ -36,6 +36,16 @@ export async function submitLeadAction(
     };
   }
 
+  // Honeypot BEFORE validation: a filled field must produce a fake
+  // success, not a validation error the bot can learn from.
+  const honeypot = formData.get("website");
+  if (typeof honeypot === "string" && honeypot.length > 0) {
+    return {
+      status: "success",
+      message: "Richiesta inviata. Ti ricontatteremo al più presto.",
+    };
+  }
+
   const parsed = leadFormSchema.safeParse({
     first_name: formData.get("first_name"),
     last_name: formData.get("last_name"),
@@ -59,11 +69,6 @@ export async function submitLeadAction(
   }
   const values = parsed.data;
 
-  // Honeypot filled: pretend success, store nothing.
-  if (values.website && values.website.length > 0) {
-    return { status: "success", message: "Richiesta inviata. Ti ricontatteremo al più presto." };
-  }
-
   const ip = await clientIp();
   const limited = rateLimit(`lead:${ip}`, { limit: 5, windowMs: 10 * 60_000 });
   if (!limited.ok) {
@@ -73,8 +78,12 @@ export async function submitLeadAction(
     };
   }
 
+  // Generated here: anon RLS cannot read the row back, but the id is
+  // needed to link the email notification log.
+  const leadId = crypto.randomUUID();
   const supabase = await createClient();
   const { error } = await supabase.from("leads").insert({
+    id: leadId,
     first_name: values.first_name,
     last_name: values.last_name ?? null,
     email: values.email,
@@ -117,6 +126,7 @@ export async function submitLeadAction(
       .filter((line): line is string => line !== null)
       .join("\n"),
     type: "lead",
+    relatedLeadId: leadId,
   });
 
   return {

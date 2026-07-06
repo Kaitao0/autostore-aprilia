@@ -15,6 +15,7 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { VehicleCard } from "@/components/site/vehicle-card";
 import { QuickSearch } from "@/components/site/quick-search";
 import { SocialSection } from "@/components/site/social-section";
+import { AutoscoutSection } from "@/components/site/autoscout-section";
 
 export default async function HomePage() {
   const [featured, makes, content, business] = await Promise.all([
@@ -224,6 +225,9 @@ export default async function HomePage() {
       {/* ── Social reels ─────────────────────────────────────── */}
       <SocialSection title={content.reels.title} items={content.reels.items} />
 
+      {/* ── AutoScout24 (secondary channel) ──────────────────── */}
+      <AutoscoutSection />
+
       {/* ── Where we are ─────────────────────────────────────── */}
       <section className="border-border/60 border-t">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 md:grid-cols-2 md:px-6">
@@ -251,8 +255,8 @@ export default async function HomePage() {
               </Button>
             </div>
             <p className="text-muted-foreground mt-4 text-xs">
-              La mappa interattiva verrà mostrata qui previo consenso ai cookie
-              (in arrivo con il banner cookie).
+              La mappa interattiva è nella pagina contatti, attivabile previo
+              consenso ai contenuti esterni.
             </p>
           </Reveal>
           <Reveal delay={0.08}>
