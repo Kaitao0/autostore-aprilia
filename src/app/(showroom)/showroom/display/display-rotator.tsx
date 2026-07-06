@@ -80,16 +80,16 @@ export function DisplayRotator({
 
   if (!vehicle) {
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 p-8 text-center">
+      <main className="flex min-h-dvh flex-col items-center justify-center gap-4 p-8 text-center">
         <Car className="text-muted-foreground size-16" aria-hidden />
-        <p className="font-heading text-3xl font-bold">
+        <h1 className="font-heading text-3xl font-bold">
           Autostore<span className="text-primary">.</span>
-        </p>
+        </h1>
         <p className="text-muted-foreground max-w-md text-lg">
           Nessun veicolo abilitato per lo showroom. Attiva “Visibile in
           showroom” sui veicoli pubblicati dall&apos;area riservata.
         </p>
-      </div>
+      </main>
     );
   }
 
@@ -106,7 +106,7 @@ export function DisplayRotator({
     .join("  ·  ");
 
   return (
-    <div className="relative flex min-h-dvh flex-col overflow-hidden landscape:flex-row">
+    <main className="relative flex min-h-dvh flex-col overflow-hidden landscape:flex-row">
       {/* Photo */}
       <div className="bg-surface-2 relative min-h-[44dvh] flex-1 landscape:min-h-dvh">
         {vehicle.cover_image_url ? (
@@ -205,6 +205,6 @@ export function DisplayRotator({
           Schermo intero
         </Button>
       ) : null}
-    </div>
+    </main>
   );
 }

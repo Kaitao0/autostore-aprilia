@@ -74,14 +74,14 @@ export function ShowroomBrowser({
   }, [reset]);
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col gap-6 px-6 py-8">
+    <main className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col gap-6 px-6 py-8">
       <header className="flex flex-wrap items-center justify-between gap-4">
-        <p className="font-heading text-3xl font-bold tracking-tight">
+        <h1 className="font-heading text-3xl font-bold tracking-tight">
           Autostore<span className="text-primary">.</span>
           <span className="text-muted-foreground ml-3 text-lg font-normal">
             showroom
           </span>
-        </p>
+        </h1>
         {(makeFilter || fuelFilter) && (
           <Button variant="outline" size="lg" onClick={reset}>
             <RotateCcw data-icon="inline-start" />
@@ -202,7 +202,7 @@ export function ShowroomBrowser({
           ) : null}
         </DialogContent>
       </Dialog>
-    </div>
+    </main>
   );
 }
 

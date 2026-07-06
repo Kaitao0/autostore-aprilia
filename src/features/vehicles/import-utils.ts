@@ -80,10 +80,17 @@ function clean(value: string | undefined | null): string {
 }
 
 export function parseNumber(value: string | undefined | null): number | null {
-  const raw = clean(value)
-    .replace(/[€.\s]/g, "")
-    .replace(",", ".");
+  let raw = clean(value).replace(/[€\s]/g, "");
   if (raw === "") return null;
+  if (raw.includes(",")) {
+    // Italian format: dots are thousands, comma is the decimal.
+    raw = raw.replaceAll(".", "").replace(",", ".");
+  } else if (/\.\d{1,2}$/.test(raw) && raw.indexOf(".") === raw.lastIndexOf(".")) {
+    // Single dot with 1-2 trailing digits: decimal point, keep it.
+  } else {
+    // Otherwise dots are thousands separators.
+    raw = raw.replaceAll(".", "");
+  }
   const n = Number(raw);
   return Number.isFinite(n) ? n : null;
 }

@@ -2,6 +2,54 @@
 
 Tutte le modifiche rilevanti del progetto, organizzate per fase.
 
+## [Fase 3 — completata, in attesa di setup DB] Showroom, consenso, AS24, import CSV — 2026-07-06
+
+### Aggiunto
+- **Sistema di consenso cookie**: banner accessibile a due scelte (i cookie
+  tecnici sono sempre attivi e dichiarati; la scelta riguarda solo i
+  contenuti esterni), persistenza locale, "Preferenze cookie" nel footer
+  per cambiare idea, componente ConsentGate con placeholder esplicito e
+  attivazione per servizio. Mappa Google su /contatti caricata SOLO previo
+  consenso.
+- **AutoScout24 (widget)**: iniettore dell'embed che ri-crea i tag script
+  (innerHTML non li esegue), sezione "Anche su AutoScout24" in home e
+  /contatti — visibile solo se configurata e sempre dietro consenso;
+  bottone profilo concessionario da business_information; editor dello
+  snippet in /admin/integrazioni (super admin, con disattivazione a un
+  click). Feed a pagamento: resta dichiarato "non attivo" (Fase 4).
+- **/showroom (tablet)**: filtri touch giganti (marca/alimentazione) con
+  aria-pressed, card grandi, dettaglio semplificato con QR alla scheda
+  pubblica, reset automatico dopo 90s di inattività, nessun header/footer
+  del sito, noindex.
+- **/showroom/display (kiosk TV)**: slideshow automatico 9s (featured e
+  nuovi arrivi per primi), prezzo gigante, disponibilità, QR, contatti,
+  layout portrait+landscape, bottone schermo intero, aggiornamento
+  automatico con polling 60s su /api/showroom e badge "offline — ultimo
+  stato salvato" quando la rete manca.
+- **Import CSV a step** (/admin/veicoli/import): upload → mappatura colonne
+  con riconoscimento automatico delle intestazioni italiane → validazione
+  per riga con normalizzazione tollerante di alimentazione/cambio/
+  carrozzeria/condizione e numeri in formato italiano → dedup via codice
+  esterno → riepilogo crea/aggiorna/salta con scelta per gli esistenti →
+  import in BOZZA (max 300 righe; gli aggiornamenti non toccano
+  pubblicazione, slug o foto) → report errori scaricabile.
+
+### Verifiche e review
+- `next build` + lint + tsc strict verdi; axe-core 0 violazioni su
+  showroom, display, home e contatti (corretti landmark/heading mancanti
+  sulle pagine showroom).
+- Review sul diff: corretti un errore di build (costante esportata da un
+  modulo "use server"), la corruzione dei prezzi con decimali in formato
+  inglese nell'import CSV e i fix di review Fase 2 (honeypot prima della
+  validazione, bodySizeLimit 50mb, id lead nel log email).
+
+### Bloccato / invariato
+- Migration ancora da applicare (rete ambiente bloccata verso supabase.co):
+  seguire docs/SETUP_SUPABASE.md.
+- Analytics consent-gated: rimandata alla Fase 4 (nessun provider scelto).
+- Restano aperti: snippet AS24 reale, RESEND_API_KEY/RESEND_FROM_EMAIL,
+  dominio, telefono/WhatsApp/orari/social/logo, testi legali.
+
 ## [Fase 2 — completata, in attesa di setup DB] Lead, permute, immagini, impostazioni — 2026-07-05
 
 ### Aggiunto
